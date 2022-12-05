@@ -52,13 +52,6 @@ public class PaperInDirAdapter extends RecyclerView.Adapter<PaperInDirAdapter.Vi
             holder.expanded = !holder.expanded;
             holder.details.setVisibility(holder.expanded ? View.VISIBLE: View.GONE);
         });
-
-        holder.upper.setOnLongClickListener(v->{
-            // todo drag to folder
-
-            return true;
-        });
-
     }
 
     @Override

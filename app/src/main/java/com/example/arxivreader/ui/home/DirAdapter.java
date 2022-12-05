@@ -4,6 +4,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -57,8 +58,11 @@ public class DirAdapter extends RecyclerView.Adapter<DirAdapter.ViewHolder> {
         PaperInDirAdapter paperAdapter = new PaperInDirAdapter(viewModel, position);
         paperView.setLayoutManager(new LinearLayoutManager(context));
         paperView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-        paperView.setAdapter(paperAdapter);
+        ItemTouchHelper.Callback dragCallback = new ItemDragCallback(paperView);
+        ItemTouchHelper helper = new ItemTouchHelper(dragCallback);
+        helper.attachToRecyclerView(paperView);
         paperAdapters.add(paperAdapter);
+        paperView.setAdapter(paperAdapter);
     }
 
     public void update() {
