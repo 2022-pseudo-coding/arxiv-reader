@@ -58,9 +58,6 @@ public class DirAdapter extends RecyclerView.Adapter<DirAdapter.ViewHolder> {
         PaperInDirAdapter paperAdapter = new PaperInDirAdapter(viewModel, position);
         paperView.setLayoutManager(new LinearLayoutManager(context));
         paperView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-        ItemTouchHelper.Callback dragCallback = new ItemDragCallback(paperView);
-        ItemTouchHelper helper = new ItemTouchHelper(dragCallback);
-        helper.attachToRecyclerView(paperView);
         paperAdapters.add(paperAdapter);
         paperView.setAdapter(paperAdapter);
     }

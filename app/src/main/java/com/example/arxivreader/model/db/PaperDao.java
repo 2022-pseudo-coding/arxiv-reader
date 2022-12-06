@@ -1,6 +1,7 @@
 package com.example.arxivreader.model.db;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
@@ -29,4 +30,7 @@ public interface PaperDao {
 
     @Query("select * from directory left join paper on directory.name = paper.directory")
     Map<Directory, List<Paper>> getDirAndPapers();
+
+    @Delete
+    void deletePapers(Paper ...papers);
 }
