@@ -57,9 +57,8 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
         holder.upper.setOnClickListener(v -> {
             fab.setVisibility(View.GONE);
             FragmentManager manager = ((MainActivity) v.getContext()).getSupportFragmentManager();
-            manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             manager.beginTransaction().replace(
-                    R.id.nav_host_fragment_content_main,
+                    R.id.canvas_container,
                     PaintFragment.newInstance(canvas.getName())
             ).addToBackStack(null).commit();
         });
