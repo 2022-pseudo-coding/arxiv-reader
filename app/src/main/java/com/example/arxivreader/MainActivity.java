@@ -3,9 +3,12 @@ package com.example.arxivreader;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
+import android.view.View;
 
+import com.example.arxivreader.model.db.CanvasDao;
 import com.example.arxivreader.model.db.PaperDao;
 import com.example.arxivreader.model.db.PaperDatabase;
+import com.example.arxivreader.ui.vm.CanvasViewModel;
 import com.example.arxivreader.ui.vm.DirViewModel;
 import com.google.android.material.navigation.NavigationView;
 
@@ -29,9 +32,11 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
     private DirViewModel dirViewModel;
+    private CanvasViewModel canvasViewModel;
 
     private static ExecutorService dbExecutor = Executors.newSingleThreadExecutor();
     private static PaperDao paperDao;
+    private static CanvasDao canvasDao;
     private static Handler dbHandler = new Handler();
 
     public static void dbExecute(Runnable r){
@@ -42,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
         dbHandler.post(r);
     }
 
+    public static CanvasDao getCanvasDao() {
+        return canvasDao;
+    }
+
     public static PaperDao getPaperDao() {
         return paperDao;
     }
@@ -50,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dirViewModel = new ViewModelProvider(this).get(DirViewModel.class);
+        canvasViewModel = new ViewModelProvider(this).get(CanvasViewModel.class);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -74,8 +84,10 @@ public class MainActivity extends AppCompatActivity {
         dbExecutor.execute(() -> {
             PaperDatabase db = Room.databaseBuilder(getApplicationContext(),
                     PaperDatabase.class, "paperdb").fallbackToDestructiveMigration().build();
-            paperDao = db.dao();
+            paperDao = db.paperDao();
+            canvasDao = db.canvasDao();
             dirViewModel.getDirMapLiveData().postValue(paperDao.getDirAndPapers());
+            canvasViewModel.getCanvasListLiveData().postValue(canvasDao.getAllCanvas());
         });
     }
 

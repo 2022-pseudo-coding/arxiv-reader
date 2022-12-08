@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.arxivreader.MainActivity;
 import com.example.arxivreader.R;
 import com.example.arxivreader.model.entity.Directory;
 import com.example.arxivreader.ui.home.DialogNameFragment;
@@ -22,8 +23,8 @@ public class DirCheckAdapter extends DirAdapter {
 
     private LifecycleOwner owner;
 
-    public DirCheckAdapter(DirViewModel viewModel, FragmentManager manager, LifecycleOwner owner) {
-        super(viewModel, manager);
+    public DirCheckAdapter(DirViewModel viewModel, FragmentManager manager, LifecycleOwner owner, MainActivity mainActivity) {
+        super(viewModel, manager, mainActivity);
         this.owner = owner;
     }
 

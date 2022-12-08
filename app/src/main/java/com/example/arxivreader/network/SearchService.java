@@ -174,7 +174,7 @@ public class SearchService extends Service {
         String link = null;
         parser.require(XmlPullParser.START_TAG, null, "link");
         String type = parser.getAttributeValue(null, "type");
-        if (type != null && type.contains("pdf")) {
+        if (type != null && type.contains("html")) {
             link = parser.getAttributeValue(null, "href");
         }
         parser.nextTag();

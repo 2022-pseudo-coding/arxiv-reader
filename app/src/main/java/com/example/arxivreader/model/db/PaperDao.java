@@ -22,11 +22,8 @@ public interface PaperDao {
     @Query("update directory set name=:newName where directory.name=:oldName")
     void updateDirName(String newName, String oldName);
 
-    @Query("select * from paper")
-    List<Paper> getPapers();
-
-    @Query("select * from directory")
-    List<Directory> getDirectories();
+    @Query("update paper set directory=:newDirName where paper.id=:id")
+    void updatePaperDir(String id, String newDirName);
 
     @Query("select * from directory left join paper on directory.name = paper.directory")
     Map<Directory, List<Paper>> getDirAndPapers();

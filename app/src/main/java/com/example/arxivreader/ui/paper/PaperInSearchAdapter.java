@@ -5,10 +5,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.arxivreader.MainActivity;
 import com.example.arxivreader.databinding.ItemPaperSearchBinding;
 import com.example.arxivreader.model.entity.Paper;
 import com.google.android.material.button.MaterialButton;
@@ -20,9 +23,11 @@ public class PaperInSearchAdapter extends RecyclerView.Adapter<PaperInSearchAdap
 
     private List<Paper> papers;
     private final FragmentManager manager;
+    private final MainActivity mainActivity;
 
-    public PaperInSearchAdapter(List<Paper> papers, FragmentManager manager) {
+    public PaperInSearchAdapter(List<Paper> papers, FragmentManager manager, MainActivity mainActivity) {
         this.papers = papers;
+        this.mainActivity = mainActivity;
         this.manager = manager;
     }
 
@@ -53,9 +58,10 @@ public class PaperInSearchAdapter extends RecyclerView.Adapter<PaperInSearchAdap
             ft.addToBackStack(null);
             dialogFragment.show(ft, "New Paper");
         });
-        // TODO: 2022/11/28 go to arxiv link
-        holder.go.setOnClickListener(v -> {
 
+        holder.go.setOnClickListener(v -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getLink()));
+            mainActivity.startActivity(browserIntent);
         });
     }
 

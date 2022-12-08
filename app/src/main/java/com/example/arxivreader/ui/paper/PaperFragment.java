@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.arxivreader.MainActivity;
 import com.example.arxivreader.R;
 import com.example.arxivreader.ui.vm.PaperViewModel;
 
@@ -33,7 +34,7 @@ public class PaperFragment extends Fragment {
         paperViewModel = new ViewModelProvider(requireActivity()).get(PaperViewModel.class);
 
         Context context = recyclerView.getContext();
-        PaperInSearchAdapter adapter = new PaperInSearchAdapter(paperViewModel.getPapers(), getFragmentManager());
+        PaperInSearchAdapter adapter = new PaperInSearchAdapter(paperViewModel.getPapers(), getFragmentManager(), (MainActivity) requireActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(adapter);

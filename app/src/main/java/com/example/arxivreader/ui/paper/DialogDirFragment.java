@@ -58,15 +58,15 @@ public class DialogDirFragment extends DialogFragment {
 
         RecyclerView recyclerView = rootView.findViewById(R.id.dir_list);
         Context context = recyclerView.getContext();
-        DirCheckAdapter dirAdapter = new DirCheckAdapter(dirViewModel, getFragmentManager(), this);
+        DirCheckAdapter dirAdapter = new DirCheckAdapter(dirViewModel, getFragmentManager(), this, (MainActivity) requireActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(dirAdapter);
 
-        dirViewModel.getDirMapLiveData().observe(this, map->{
+        dirViewModel.getDirMapLiveData().observe(this, map -> {
             dirAdapter.update();
         });
-        rootView.findViewById(R.id.dir_add_btn).setOnClickListener(v->{
+        rootView.findViewById(R.id.dir_add_btn).setOnClickListener(v -> {
             DialogNameFragment dialogFragment = DialogNameFragment.newInstance(null);
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             dialogFragment.show(ft, "New Directory");
@@ -80,35 +80,34 @@ public class DialogDirFragment extends DialogFragment {
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         AlertDialog dialog = (AlertDialog) getDialog();
-        if(dialog != null){
+        if (dialog != null) {
             dirViewModel.getSelectedDirLiveData().setValue(null);
             dialog.setCancelable(true);
             dialog.setCanceledOnTouchOutside(true);
-            dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(v->{
+            dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(v -> {
                 Directory toSave = dirViewModel.getSelectedDir();
-                if(toSave == null){
+                if (toSave == null) {
                     Toast.makeText(getContext(), "Please select a directory first", Toast.LENGTH_SHORT).show();
-                }else {
-                    MainActivity.dbExecute(()->{
-                        try{
+                } else {
+                    MainActivity.dbExecute(() -> {
+                        try {
                             paper.setDirectory(toSave.getName());
                             MainActivity.getPaperDao().insertPapers(paper);
                             dirViewModel.getDirMapLiveData().postValue(MainActivity.getPaperDao().getDirAndPapers());
 
-                            MainActivity.dbHandle(()->{
+                            MainActivity.dbHandle(() -> {
                                 Toast.makeText(getContext(), "Paper successfully added", Toast.LENGTH_SHORT).show();
                                 dismiss();
                             });
-                        }catch (SQLiteConstraintException e){
-                            MainActivity.dbHandle(()->{
+                        } catch (SQLiteConstraintException e) {
+                            MainActivity.dbHandle(() -> {
                                 Toast.makeText(getContext(), "This paper has been saved already", Toast.LENGTH_SHORT).show();
                             });
                         }
                     });
-
                 }
             });
         }

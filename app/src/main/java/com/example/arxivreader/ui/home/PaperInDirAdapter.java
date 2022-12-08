@@ -1,6 +1,11 @@
 package com.example.arxivreader.ui.home;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipDescription;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,9 +28,11 @@ public class PaperInDirAdapter extends RecyclerView.Adapter<PaperInDirAdapter.Vi
 
     private DirViewModel viewModel;
     private int dirPosition;
+    private MainActivity mainActivity;
 
-    public PaperInDirAdapter(DirViewModel viewModel, int dirPosition){
+    public PaperInDirAdapter(DirViewModel viewModel, int dirPosition, MainActivity mainActivity){
         this.viewModel = viewModel;
+        this.mainActivity = mainActivity;
         this.dirPosition = dirPosition;
     }
 
@@ -38,6 +46,7 @@ public class PaperInDirAdapter extends RecyclerView.Adapter<PaperInDirAdapter.Vi
         return new PaperInDirAdapter.ViewHolder(ItemPaperDirBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Paper paper = viewModel.getDirPapers(dirPosition).get(position);
@@ -49,7 +58,19 @@ public class PaperInDirAdapter extends RecyclerView.Adapter<PaperInDirAdapter.Vi
         holder.published.append(paper.getPublished());
 
         holder.go.setOnClickListener(v->{
-            //todo go to link
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(paper.getLink()));
+            mainActivity.startActivity(browserIntent);
+        });
+
+        holder.upper.setOnLongClickListener(v->{
+            View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(holder.upper);
+            ClipData data = new ClipData(
+                    paper.getId(),
+                    new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
+                    new ClipData.Item(paper.getId())
+            );
+            v.startDragAndDrop(data, shadowBuilder, null, 0);
+            return true;
         });
 
         holder.delete.setOnClickListener(v->{

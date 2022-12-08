@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.arxivreader.MainActivity;
 import com.example.arxivreader.databinding.FragmentHomeBinding;
 import com.example.arxivreader.ui.vm.DirViewModel;
 
@@ -35,7 +36,7 @@ public class HomeFragment extends Fragment {
 
         Context context = recyclerView.getContext();
         LifecycleOwner owner = getViewLifecycleOwner();
-        DirAdapter dirAdapter = new DirAdapter(dirViewModel, getFragmentManager());
+        DirAdapter dirAdapter = new DirAdapter(dirViewModel, getFragmentManager(), (MainActivity)requireActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(dirAdapter);

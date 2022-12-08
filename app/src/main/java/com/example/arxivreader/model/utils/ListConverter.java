@@ -1,4 +1,4 @@
-package com.example.arxivreader.model.db;
+package com.example.arxivreader.model.utils;
 
 import androidx.room.TypeConverter;
 
