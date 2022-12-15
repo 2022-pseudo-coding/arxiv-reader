@@ -3,7 +3,9 @@ package com.example.arxivreader.model.db;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.arxivreader.model.entity.Node;
 import com.example.arxivreader.model.entity.Canvas;
@@ -26,4 +28,10 @@ public interface CanvasDao {
 
     @Query("update canvas set name=:newName where canvas.name=:oldName")
     void updateCanvasName(String newName, String oldName);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertNodes(Node... nodes);
+
+    @Query("select * from node where node.canvas=:canvas")
+    List<Node> getAllNodesFromCanvas(String canvas);
 }

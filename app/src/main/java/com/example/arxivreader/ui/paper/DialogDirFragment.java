@@ -24,7 +24,7 @@ import com.example.arxivreader.R;
 import com.example.arxivreader.model.entity.Directory;
 import com.example.arxivreader.model.entity.Paper;
 import com.example.arxivreader.ui.home.DialogNameFragment;
-import com.example.arxivreader.ui.home.DirAdapter;
+import com.example.arxivreader.ui.home.DirCheckAdapter;
 import com.example.arxivreader.ui.vm.DirViewModel;
 
 public class DialogDirFragment extends DialogFragment {

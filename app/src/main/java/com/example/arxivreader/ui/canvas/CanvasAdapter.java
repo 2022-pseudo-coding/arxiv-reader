@@ -2,7 +2,6 @@ package com.example.arxivreader.ui.canvas;
 
 import android.app.AlertDialog;
 import android.database.sqlite.SQLiteConstraintException;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.arxivreader.MainActivity;
 import com.example.arxivreader.R;
 import com.example.arxivreader.databinding.ItemCanvasBinding;
-import com.example.arxivreader.databinding.ItemDirBinding;
 import com.example.arxivreader.model.entity.Canvas;
-import com.example.arxivreader.ui.home.DirAdapter;
 import com.example.arxivreader.ui.vm.CanvasViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

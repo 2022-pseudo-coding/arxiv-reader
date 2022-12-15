@@ -3,8 +3,8 @@ package com.example.arxivreader.ui.home;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,17 +28,28 @@ import java.util.HashSet;
 import java.util.Set;
 
 // all the dirs
-public class DirAdapter extends RecyclerView.Adapter<DirAdapter.ViewHolder> {
+public class DirDisplayAdapter extends RecyclerView.Adapter<DirDisplayAdapter.ViewHolder> {
 
     private final DirViewModel viewModel;
     private final FragmentManager manager;
     private final MainActivity mainActivity;
-    private final Set<PaperInDirAdapter> paperAdapters = new HashSet<>();
+    private final Set<PaperDisplayAdapter> paperAdapters = new HashSet<>();
+    protected boolean displayPaper;
+    private LifecycleOwner owner;
 
-    public DirAdapter(DirViewModel viewModel, FragmentManager manager, MainActivity mainActivity) {
+    public DirDisplayAdapter(DirViewModel viewModel, FragmentManager manager, MainActivity mainActivity) {
         this.viewModel = viewModel;
         this.manager = manager;
         this.mainActivity = mainActivity;
+        this.displayPaper = true;
+    }
+
+    public DirDisplayAdapter(DirViewModel viewModel, FragmentManager manager, MainActivity mainActivity, LifecycleOwner owner) {
+        this.viewModel = viewModel;
+        this.manager = manager;
+        this.mainActivity = mainActivity;
+        this.owner = owner;
+        this.displayPaper = false;
     }
 
     @Override
@@ -66,7 +77,6 @@ public class DirAdapter extends RecyclerView.Adapter<DirAdapter.ViewHolder> {
                     if (e.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
                         v.invalidate();
                         return true;
-
                     }
                     return false;
 
@@ -101,7 +111,12 @@ public class DirAdapter extends RecyclerView.Adapter<DirAdapter.ViewHolder> {
 
         RecyclerView paperView = holder.paperList;
         Context context = paperView.getContext();
-        PaperInDirAdapter paperAdapter = new PaperInDirAdapter(viewModel, position, mainActivity);
+        PaperDisplayAdapter paperAdapter;
+        if(this.displayPaper){
+            paperAdapter = new PaperDisplayAdapter(viewModel, position, mainActivity);
+        }else{
+            paperAdapter = new PaperCheckAdapter(viewModel, position, mainActivity, owner);
+        }
         paperView.setLayoutManager(new LinearLayoutManager(context));
         paperView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
         paperAdapters.add(paperAdapter);
@@ -109,7 +124,7 @@ public class DirAdapter extends RecyclerView.Adapter<DirAdapter.ViewHolder> {
     }
 
     public void update() {
-        for (PaperInDirAdapter temp : paperAdapters) {
+        for (PaperDisplayAdapter temp : paperAdapters) {
             temp.update();
         }
         notifyDataSetChanged();

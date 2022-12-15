@@ -16,6 +16,11 @@
         android:name="com.example.arxivreader.ui.search.SearchFragment"
         android:label="@string/menu_search"
         tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/nav_upload"
+        android:name="com.example.arxivreader.ui.upload.UploadFragment"
+        android:label="@string/upload"
+        tools:layout="@layout/fragment_upload"/>
 
     <fragment
         android:id="@+id/nav_canvas"

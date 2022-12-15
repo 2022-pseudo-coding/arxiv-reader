@@ -1,25 +1,17 @@
-package com.example.arxivreader.ui.paper;
+package com.example.arxivreader.ui.home;
 
-import android.content.Context;
 import android.graphics.Color;
-import android.view.View;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+
 
 import com.example.arxivreader.MainActivity;
-import com.example.arxivreader.R;
 import com.example.arxivreader.model.entity.Directory;
-import com.example.arxivreader.ui.home.DialogNameFragment;
-import com.example.arxivreader.ui.home.DirAdapter;
-import com.example.arxivreader.ui.home.PaperInDirAdapter;
 import com.example.arxivreader.ui.vm.DirViewModel;
 
-public class DirCheckAdapter extends DirAdapter {
+public class DirCheckAdapter extends DirDisplayAdapter {
 
     private LifecycleOwner owner;
 

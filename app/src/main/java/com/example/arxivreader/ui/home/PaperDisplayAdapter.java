@@ -24,13 +24,13 @@ import com.example.arxivreader.ui.vm.DirViewModel;
 import com.google.android.material.button.MaterialButton;
 
 // papers in a dir
-public class PaperInDirAdapter extends RecyclerView.Adapter<PaperInDirAdapter.ViewHolder>{
+public class PaperDisplayAdapter extends RecyclerView.Adapter<PaperDisplayAdapter.ViewHolder>{
 
-    private DirViewModel viewModel;
-    private int dirPosition;
-    private MainActivity mainActivity;
+    protected DirViewModel viewModel;
+    protected int dirPosition;
+    protected MainActivity mainActivity;
 
-    public PaperInDirAdapter(DirViewModel viewModel, int dirPosition, MainActivity mainActivity){
+    public PaperDisplayAdapter(DirViewModel viewModel, int dirPosition, MainActivity mainActivity){
         this.viewModel = viewModel;
         this.mainActivity = mainActivity;
         this.dirPosition = dirPosition;
@@ -43,7 +43,7 @@ public class PaperInDirAdapter extends RecyclerView.Adapter<PaperInDirAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new PaperInDirAdapter.ViewHolder(ItemPaperDirBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        return new PaperDisplayAdapter.ViewHolder(ItemPaperDirBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

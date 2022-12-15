@@ -36,13 +36,13 @@ public class HomeFragment extends Fragment {
 
         Context context = recyclerView.getContext();
         LifecycleOwner owner = getViewLifecycleOwner();
-        DirAdapter dirAdapter = new DirAdapter(dirViewModel, getFragmentManager(), (MainActivity)requireActivity());
+        DirDisplayAdapter dirDisplayAdapter = new DirDisplayAdapter(dirViewModel, getFragmentManager(), (MainActivity)requireActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(dirAdapter);
+        recyclerView.setAdapter(dirDisplayAdapter);
 
         dirViewModel.getDirMapLiveData().observe(owner, map->{
-            dirAdapter.update();
+            dirDisplayAdapter.update();
         });
 
         /**
