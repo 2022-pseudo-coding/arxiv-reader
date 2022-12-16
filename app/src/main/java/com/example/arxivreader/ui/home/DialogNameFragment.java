@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.arxivreader.MainActivity;
 import com.example.arxivreader.R;
 import com.example.arxivreader.model.entity.Directory;
+import com.example.arxivreader.model.entity.Paper;
 import com.example.arxivreader.ui.vm.DirViewModel;
 
 public class DialogNameFragment extends DialogFragment {
@@ -88,6 +89,9 @@ public class DialogNameFragment extends DialogFragment {
                         MainActivity.dbExecute(()->{
                             try{
                                 MainActivity.getPaperDao().updateDirName(title, directory.getName());
+                                for(Paper paper:viewModel.getDirMap().get(directory)){
+                                    MainActivity.getPaperDao().updatePaperDir(paper.getId(), title);
+                                }
                                 viewModel.getDirMapLiveData().postValue(MainActivity.getPaperDao().getDirAndPapers());
                                 dismiss();
                             }catch (SQLiteConstraintException e){

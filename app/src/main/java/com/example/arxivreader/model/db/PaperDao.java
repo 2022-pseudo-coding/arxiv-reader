@@ -20,7 +20,7 @@ public interface PaperDao {
     void insertDirectories(Directory... directories);
 
     @Query("update directory set name=:newName where directory.name=:oldName")
-    void updateDirName(String newName, String oldName);
+     void updateDirName(String newName, String oldName);
 
     @Query("update paper set directory=:newDirName where paper.id=:id")
     void updatePaperDir(String id, String newDirName);
