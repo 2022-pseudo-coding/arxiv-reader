@@ -85,4 +85,8 @@ public class CanvasFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    public static CanvasFragment newInstance() {
+        return new CanvasFragment();
+    }
 }

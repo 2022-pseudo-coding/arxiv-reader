@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.canvas.CanvasFragment"
-    android:id="@+id/canvas_container">
+    android:id="@+id/canvas_container"
+    android:background="@color/white">
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"

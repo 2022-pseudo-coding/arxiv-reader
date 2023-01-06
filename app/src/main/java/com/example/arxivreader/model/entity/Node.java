@@ -22,8 +22,8 @@ public class Node {
 
     @ColumnInfo(name = "location")
     private int location;
-    @ColumnInfo(name = "isPlain")
-    private boolean isPlain;
+    @ColumnInfo(name = "type")
+    private String type;
     @ColumnInfo(name = "title")
     private String title;
     @ColumnInfo(name = "parent")
@@ -33,11 +33,11 @@ public class Node {
 
     public Node(){}
 
-    public Node(String canvas, String color, boolean isPlain, String title, Node parent, int location) {
+    public Node(String canvas, String color, String type, String title, Node parent, int location) {
         this.canvas = canvas;
         this.location = location;
         this.color = color;
-        this.isPlain = isPlain;
+        this.type = type;
         this.title = title;
         if(parent == null){
             this.level = 0;
@@ -82,8 +82,8 @@ public class Node {
         return parent;
     }
 
-    public void setPlain(boolean plain) {
-        isPlain = plain;
+    public String getType() {
+        return type;
     }
 
     @Override
@@ -94,13 +94,13 @@ public class Node {
         return id.equals(node.id);
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public boolean isPlain() {
-        return isPlain;
     }
 
     public String getColor() {

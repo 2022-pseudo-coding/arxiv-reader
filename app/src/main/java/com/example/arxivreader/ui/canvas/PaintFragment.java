@@ -23,6 +23,7 @@ import com.example.arxivreader.MainActivity;
 import com.example.arxivreader.R;
 import com.example.arxivreader.databinding.FragmentPaintBinding;
 import com.example.arxivreader.model.entity.Node;
+import com.example.arxivreader.model.entity.Paper;
 import com.example.arxivreader.ui.vm.CanvasViewModel;
 
 import java.util.List;
@@ -84,17 +85,26 @@ public class PaintFragment extends Fragment {
                 });
             });
         });
+        binding.goBackCanvasBtn.setOnClickListener(v -> {
+            FragmentManager manager = ((MainActivity) v.getContext()).getSupportFragmentManager();
+            binding.saveCanvasBtn.setVisibility(View.GONE);
+            v.setVisibility(View.GONE);
+            manager.beginTransaction().replace(
+                    R.id.paint_fragment_container,
+                    CanvasFragment.newInstance()
+            ).addToBackStack(null).commit();
+        });
         mindMappingView = binding.mindMapping;
         MainActivity.dbExecute(() -> {
             List<Node> allNodes = MainActivity.getCanvasDao().getAllNodesFromCanvas(canvasTitle);
             canvasViewModel.postNodes(allNodes);
             if (allNodes.isEmpty()) {
                 MainActivity.dbHandle(() -> {
-                    Item root = genItem(canvasTitle, true, "#ffffff");
+                    Item root = genItem(canvasTitle, "plain", "#ffffff");
                     mindMappingView.addCentralItem(root, true);
                     root.setY(-1000);
                     root.setX(-400);
-                    canvasViewModel.addNodeItem(new Node(canvasTitle, "#ffffff", true, canvasTitle, null, 0), root);
+                    canvasViewModel.addNodeItem(new Node(canvasTitle, "#ffffff", "plain", canvasTitle, null, 0), root);
                 });
             } else {
                 MainActivity.dbHandle(() -> {
@@ -107,7 +117,7 @@ public class PaintFragment extends Fragment {
                             if (curr.getLevel() == level) {
                                 if (level == 0) {
                                     // root
-                                    Item root = genItem(curr.getTitle(), curr.isPlain(), curr.getColor());
+                                    Item root = genItem(curr.getTitle(), curr.getType(), curr.getColor());
                                     mindMappingView.addCentralItem(root, true);
                                     root.setY(-1000);
                                     root.setX(-400);
@@ -122,7 +132,7 @@ public class PaintFragment extends Fragment {
                                         x = 50;
                                         y = 500;
                                     }
-                                    Item currItem = addNode(canvasViewModel.findNodeParentItem(curr), curr.getTitle(), curr.isPlain(), curr.getLocation(), x, y, curr.getColor());
+                                    Item currItem = addNode(canvasViewModel.findNodeParentItem(curr), curr.getTitle(), curr.getType(), curr.getLocation(), x, y, curr.getColor());
                                     canvasViewModel.addNodeItem(curr, currItem);
                                 }
                             }
@@ -134,8 +144,8 @@ public class PaintFragment extends Fragment {
         return binding.getRoot();
     }
 
-    public Item addNode(Item parent, String title, boolean isPlainNode, int location, int x, int y, String color) {
-        Item item = genItem(title, isPlainNode, color);
+    public Item addNode(Item parent, String title, String nodeType, int location, int x, int y, String color) {
+        Item item = genItem(title, nodeType, color);
         mindMappingView.addItem(item,
                 parent,
                 0, 0,
@@ -145,39 +155,74 @@ public class PaintFragment extends Fragment {
         return item;
     }
 
-    private Item genItem(String title, boolean isPlainNode, String color) {
+    private Item genItem(String title, String nodeType, String color) {
         Item item = new Item(getContext(), title, "", false);
         item.removeAllViews();
         item.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-        LinearLayout left = new LinearLayout(getContext());
+        LinearLayout upper = new LinearLayout(getContext());
         GradientDrawable shape = new GradientDrawable();
         shape.setColor(Color.parseColor(color));
         shape.setCornerRadius(50);
-        left.setBackground(shape);
-        left.addView(item.getTitle());
-        left.setGravity(Gravity.CENTER);
+        upper.setBackground(shape);
+        upper.addView(item.getTitle());
+        upper.setGravity(Gravity.CENTER);
         item.getTitle().setGravity(Gravity.CENTER);
         item.getTitle().setTextSize(20);
-        item.getTitle().setLayoutParams(new LinearLayout.LayoutParams(400, 200));
+        item.getTitle().setLayoutParams(new LinearLayout.LayoutParams(450, 200));
 
-        LinearLayout right = new LinearLayout(getContext());
-        if (isPlainNode) {
+        LinearLayout bottom = new LinearLayout(getContext());
+        if ("plain".equals(nodeType)) {
             // add node
-            right.addView(getButton(R.drawable.ic_baseline_add_box_24, v -> {
+            Button addNode = getButton(R.drawable.ic_baseline_add_box_24, v -> {
                 startDialog(new DialogCanvas.DialogNode(getContext(), this, item));
-            }));
+            });
+            bottom.addView(addNode);
+            ((LinearLayout.LayoutParams) addNode.getLayoutParams()).setMarginStart(30);
             // add papers
-            right.addView(getButton(R.drawable.ic_baseline_bookmark_24, v -> {
-                startDialog(new DialogCanvas.DialogPaper(getContext(), this, getViewLifecycleOwner(), item));
+            bottom.addView(getButton(R.drawable.ic_baseline_bookmark_24, v -> {
+                startDialog(new DialogCanvas.DialogPaper(getContext(), this, getViewLifecycleOwner(), item, ItemLocation.RIGHT));
             }));
             // add notes
-            right.addView(getButton(R.drawable.ic_baseline_sticky_note_2_24, v -> {
+            bottom.addView(getButton(R.drawable.ic_baseline_sticky_note_2_24, v -> {
                 startDialog(new DialogCanvas.DialogNote(getContext(), this, item));
             }));
+        } else if ("paper".equals(nodeType)) {
+            // add papers
+            Button addPaper = getButton(R.drawable.ic_baseline_bookmark_24, v -> {
+                startDialog(new DialogCanvas.DialogPaper(getContext(), this, getViewLifecycleOwner(), item, ItemLocation.BOTTOM));
+            });
+            bottom.addView(addPaper);
+            ((LinearLayout.LayoutParams) addPaper.getLayoutParams()).setMarginStart(130);
+            // add notes
+            bottom.addView(getButton(R.drawable.ic_baseline_sticky_note_2_24, v -> {
+                startDialog(new DialogCanvas.DialogNote(getContext(), this, item));
+            }));
+
+            Button details = getButton(R.drawable.ic_baseline_book_24, v -> {
+                MainActivity.dbExecute(()->{
+                    Paper paper = MainActivity.getPaperDao().findPapersByTitle(title).get(0);
+                    MainActivity.dbHandle(()->{
+                        FragmentManager manager = getFragmentManager();
+                        FragmentTransaction ft = manager.beginTransaction();
+                        Fragment prev = manager.findFragmentByTag("dialog");
+                        if (prev != null) {
+                            ft.remove(prev);
+                        }
+                        ft.addToBackStack(null);
+                        new DialogPaperDetails(paper).show(ft, "Canvas Dialog");
+                    });
+                });
+            });
+            details.setBackgroundColor(Color.TRANSPARENT);
+            LinearLayout.LayoutParams temp = new LinearLayout.LayoutParams(70, 70);
+            temp.setMarginStart(50);
+            temp.setMarginEnd(-50);
+            details.setLayoutParams(temp);
+            upper.addView(details, 0);
         }
 
-        item.addView(left);
-        item.addView(right);
+        item.addView(upper);
+        item.addView(bottom);
         item.setPadding(50, 20, 50, 20);
         return item;
     }

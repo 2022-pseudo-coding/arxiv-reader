@@ -93,9 +93,9 @@ public abstract class DialogCanvas extends DialogFragment {
                 if ("".equals(nodeName)) {
                     Toast.makeText(paintContext, "You must give a name for the node", Toast.LENGTH_SHORT).show();
                 } else {
-                    Item curr = paintFragment.addNode(parent, nodeName, true, ItemLocation.BOTTOM, -350, -500, "#ffffff");
+                    Item curr = paintFragment.addNode(parent, nodeName, "plain", ItemLocation.BOTTOM, -350, -500, "#ffffff");
                     paintFragment.getCanvasViewModel().addNodeItem(new Node(paintFragment.getCanvasTitle(),
-                            "#ffffff", true,
+                            "#ffffff", "plain",
                             nodeName, paintFragment.getCanvasViewModel().getItemNode(parent), ItemLocation.BOTTOM), curr);
                     dismiss();
                 }
@@ -119,10 +119,10 @@ public abstract class DialogCanvas extends DialogFragment {
                 if ("".equals(noteContent)) {
                     Toast.makeText(paintContext, "You must write something for the note", Toast.LENGTH_SHORT).show();
                 } else {
-                    Item curr = paintFragment.addNode(parent, noteContent, false, ItemLocation.RIGHT, 100, -800, "#d5c3fe");
+                    Item curr = paintFragment.addNode(parent, noteContent, "note", ItemLocation.RIGHT, 100, -800, "#d5c3fe");
                     paintFragment.getCanvasViewModel().addNodeItem(new Node(paintFragment.getCanvasTitle(),
-                            "#d5c3fe", false,
-                            noteContent,paintFragment.getCanvasViewModel().getItemNode(parent), ItemLocation.RIGHT), curr);
+                            "#d5c3fe", "note",
+                            noteContent, paintFragment.getCanvasViewModel().getItemNode(parent), ItemLocation.RIGHT), curr);
                     dismiss();
                 }
             };
@@ -136,10 +136,12 @@ public abstract class DialogCanvas extends DialogFragment {
 
         private final LifecycleOwner owner;
         private DirViewModel dirViewModel;
+        private final int location;
 
-        public DialogPaper(Context paintContext, PaintFragment paintFragment, LifecycleOwner owner, Item item) {
+        public DialogPaper(Context paintContext, PaintFragment paintFragment, LifecycleOwner owner, Item item, int location) {
             super(paintContext, paintFragment, R.layout.fragment_home, "Add a Paper Node", item);
             this.owner = owner;
+            this.location = location;
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -150,10 +152,12 @@ public abstract class DialogCanvas extends DialogFragment {
                     Toast.makeText(paintContext, "You must select a paper", Toast.LENGTH_SHORT).show();
                 } else {
                     String title = dirViewModel.getSelectedPaper().getTitle();
-                    Item curr = paintFragment.addNode(parent, title, false, ItemLocation.RIGHT, 100, -800, "#c3fef3");
+                    int x = (location == ItemLocation.BOTTOM) ? -350 : 100;
+                    int y = (location == ItemLocation.BOTTOM) ? -500 : -800;
+                    Item curr = paintFragment.addNode(parent, title, "paper", location, x, y, "#c3fef3");
                     paintFragment.getCanvasViewModel().addNodeItem(new Node(paintFragment.getCanvasTitle(),
-                            "#c3fef3", false,
-                            title, paintFragment.getCanvasViewModel().getItemNode(parent), ItemLocation.RIGHT), curr);
+                            "#c3fef3", "paper",
+                            title, paintFragment.getCanvasViewModel().getItemNode(parent), location), curr);
                     dismiss();
                 }
             };

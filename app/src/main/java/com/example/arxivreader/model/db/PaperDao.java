@@ -19,6 +19,9 @@ public interface PaperDao {
     @Insert
     void insertDirectories(Directory... directories);
 
+    @Query("select * from paper where paper.title =:title")
+    List<Paper> findPapersByTitle(String title);
+
     @Query("update directory set name=:newName where directory.name=:oldName")
      void updateDirName(String newName, String oldName);
 

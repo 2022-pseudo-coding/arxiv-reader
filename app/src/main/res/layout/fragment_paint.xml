@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.canvas.PaintFragment"
+    android:id="@+id/paint_fragment_container"
     >
     <me.jagar.mindmappingandroidlibrary.Zoom.ZoomLayout
         android:background="#FFE0B1"
@@ -44,14 +45,27 @@
             android:background="#FFE0B1"
 />
     </me.jagar.mindmappingandroidlibrary.Zoom.ZoomLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/save_canvas_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="76dp"
         android:clickable="true"
         android:src="@drawable/ic_baseline_save_24"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/go_back_canvas_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:clickable="true"
+        android:src="@drawable/ic_baseline_arrow_back_24"
+        app:layout_constraintBottom_toTopOf="@+id/save_canvas_btn"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
