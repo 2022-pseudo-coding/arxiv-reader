@@ -33,4 +33,7 @@ public interface PaperDao {
 
     @Delete
     void deletePapers(Paper ...papers);
+
+    @Delete
+    void deleteDirs(Directory ...directories);
 }

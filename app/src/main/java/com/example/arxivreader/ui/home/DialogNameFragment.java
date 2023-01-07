@@ -51,6 +51,10 @@ public class DialogNameFragment extends DialogFragment {
         builder.setTitle("New Directory Name")
                 .setPositiveButton("OK", (dialog, which) -> {
                 });
+        if (directory !=null){
+            builder.setNegativeButton("DELETE", (dialog, which) -> {
+            });
+        }
         newName = view.findViewById(R.id.add_dir_name);
         return builder.create();
     }
@@ -63,6 +67,16 @@ public class DialogNameFragment extends DialogFragment {
         if (dialog != null) {
             dialog.setCancelable(true);
             dialog.setCanceledOnTouchOutside(true);
+            if(directory !=null){
+                dialog.getButton(Dialog.BUTTON_NEGATIVE).setOnClickListener(v -> {
+                    MainActivity.dbExecute(()->{
+                        MainActivity.getPaperDao().deleteDirs(directory);
+                        viewModel.getDirMapLiveData().postValue(MainActivity.getPaperDao().getDirAndPapers());
+                        dismiss();
+                    });
+                });
+            }
+
             dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(v -> {
                 String title = this.newName.getText().toString();
                 if ("".equals(title)) {
@@ -74,28 +88,28 @@ public class DialogNameFragment extends DialogFragment {
                         // insert
                         Directory dir = new Directory(title);
                         MainActivity.dbExecute(() -> {
-                            try{
+                            try {
                                 MainActivity.getPaperDao().insertDirectories(dir);
                                 viewModel.getDirMapLiveData().postValue(MainActivity.getPaperDao().getDirAndPapers());
                                 dismiss();
-                            }catch (SQLiteConstraintException e){
-                                MainActivity.dbHandle(()->{
+                            } catch (SQLiteConstraintException e) {
+                                MainActivity.dbHandle(() -> {
                                     Toast.makeText(getContext(), "Cannot create directory: repeated name", Toast.LENGTH_SHORT).show();
                                 });
                             }
                         });
                     } else {
                         // update
-                        MainActivity.dbExecute(()->{
-                            try{
+                        MainActivity.dbExecute(() -> {
+                            try {
                                 MainActivity.getPaperDao().updateDirName(title, directory.getName());
-                                for(Paper paper:viewModel.getDirMap().get(directory)){
+                                for (Paper paper : viewModel.getDirMap().get(directory)) {
                                     MainActivity.getPaperDao().updatePaperDir(paper.getId(), title);
                                 }
                                 viewModel.getDirMapLiveData().postValue(MainActivity.getPaperDao().getDirAndPapers());
                                 dismiss();
-                            }catch (SQLiteConstraintException e){
-                                MainActivity.dbHandle(()->{
+                            } catch (SQLiteConstraintException e) {
+                                MainActivity.dbHandle(() -> {
                                     Toast.makeText(getContext(), "Cannot alter the directory's name: repeated name", Toast.LENGTH_SHORT).show();
                                 });
                             }
